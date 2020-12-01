@@ -92,3 +92,10 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+Spring/demo/src/test/
+Spring/demo/.gitignore
+Spring/demo/.mvn/
+Spring/demo/mvnw
+Spring/demo/mvnw.cmd
+
