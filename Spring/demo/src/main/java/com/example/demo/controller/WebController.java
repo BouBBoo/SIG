@@ -38,8 +38,6 @@ public class WebController {
 
         salle.setFonction(fonction);
         salleService.saveSalle(salle);
-
-        model = setModel(model);
-        return "salles";
+        return "redirect:/salles";
     }
 }
