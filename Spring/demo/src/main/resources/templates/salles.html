@@ -10,7 +10,6 @@
         <thead>
             <tr>
                 <th th:text="${'Etage ' + (i + 1)}">Etage</th>
-                <th>Id Salle</th>
                 <th>Fonction Salle</th>
                 <th>#</th>
             </tr>
@@ -18,8 +17,7 @@
         <tbody>
             <tr th:each="salle: ${salles}">
                 <form th:action="@{/update}" method="post">
-                    <td th:if="${salle.getEtage() == i}">#</td>
-                    <td th:if="${salle.getEtage() == i}"><input type="hidden"  th:name="id" th:value="${salle.getId()}"></td>
+                    <td th:if="${salle.getEtage() == i}">#<input type="hidden"  th:name="id" th:value="${salle.getId()}"></td>
                     <td th:if="${salle.getEtage() == i}"><input type="text" class="form-control" th:name="fonction" th:value="${salle.getFonction()}"></td>
                     <td th:if="${salle.getEtage() == i}"><button class="btn btn-primary" type="submit">Save</button></td>
                 </form>
