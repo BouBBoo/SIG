@@ -1,7 +1,5 @@
 package com.example.demo.modele;
 
-import org.postgis.Geometry;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -9,23 +7,28 @@ import java.io.Serializable;
 @Entity
 public class Salle implements Serializable {
     @Id
-    private int id;
+    private long id;
     private String fonction;
     private int etage;
 
     public Salle(){}
 
-    public Salle(int id, String fonction, int etage) {
+    public Salle(long id, String fonction, int etage) {
         this.id = id;
         this.fonction = fonction;
         this.etage = etage;
     }
 
-    public int getId() {
+    @Override
+    public String toString() {
+        return "id: " + id + ", fonction: " + fonction + ", etage: " + etage;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
