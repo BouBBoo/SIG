@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         WebView myWebView = (WebView) findViewById(R.id.webview);
-        myWebView.loadUrl("http://www.google.com");
+        myWebView.loadUrl("http://localhost:8080/geoserver/rest/layers/salleE0.html");
     }
 }
