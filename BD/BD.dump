@@ -1,44 +1,75 @@
+DROP TABLE Voisin_Salle_Salle;
+DROP TABLE Voisin_Salle_Escalier;
+DROP TABLE Voisin_Escalier_Escalier;
 DROP TABLE SALLE;
 DROP TABLE ESCALIER;
-DROP TABLE CHEMIN;
 
 CREATE TABLE Salle(
-	id integer NOT NULL,
-	fonction varchar,
+	id integer PRIMARY KEY,
+	nom varchar,
 	geom geometry,
+	type_salle varchar,
 	etage integer
 );
 
 CREATE TABLE Escalier(
-	id integer NOT NULL,
+	id integer NOT NULL PRIMARY KEY,
 	geom geometry,
 	etage_courant integer NOT NULL,
 	etage_destination integer NOT NULL
 );
 
-CREATE TABLE CHEMIN(
-	id integer NOT NULL,
-	geom geometry,
-	etage integer
+CREATE TABLE Voisin_Salle_Salle(
+	idSalle1 integer NOT NULL REFERENCES Salle(id),
+	idSalle2 integer NOT NULL REFERENCES Salle(id)
 );
 
+CREATE TABLE Voisin_Salle_Escalier(
+	idSalle integer NOT NULL REFERENCES Salle(id),
+	idEscalier integer NOT NULL REFERENCES Escalier(id)
+);
+
+CREATE TABLE Voisin_Escalier_Escalier(
+	idEscalier1 integer NOT NULL REFERENCES Escalier(id),
+	idEscalier2 integer NOT NULL REFERENCES Escalier(id)
+);
+
+
+
+
 INSERT INTO SALLE VALUES
-	(1, 'Salle de TP E01', 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', 0),
-	(2, 'Salle de TP E02', 'POLYGON((0 0, 1 0, 1 -1, 0 -1, 0 0))', 0),
-	(3, 'Amphi herbrand', 'POLYGON((0 -1, 1 -1, 1 -2, 0 -2, 0 -1))', 0),
-	(4, 'Salle de TD E04', 'POLYGON((2 0, 3 0, 3 1, 2 1, 2 0))', 0),
-	(5, 'WC', 'POLYGON((2 0, 3 0, 3 -1, 2 -1, 2 0))', 0),
-	(6, 'Infirmerie', 'POLYGON((2 -1, 3 -1, 3 -2, 2 -2, 2 -1))', 0),
-	(7, 'Bureau directeur', 'POLYGON((2 0, 3 0, 3 1, 2 1, 2 0))', 1),
-	(8, 'Secretariat', 'POLYGON((2 0, 3 0, 3 -1, 2 -1, 2 0))', 1),
-	(9, 'Salle de réunion', 'POLYGON((0 0, 1 0, 1 -1, 0 -1, 0 0))', 1),
-	(10, 'Salle de TD E11', 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', 1);
+	(1, 'E01', 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))','Salle de TP',  0),
+	(2, 'E02', 'POLYGON((0 0, 1 0, 1 -1, 0 -1, 0 0))','Salle de TP', 0),
+	(3, 'Amphi Herbrand', 'POLYGON((0 -1, 1 -1, 1 -2, 0 -2, 0 -1))','Amphi', 0),
+	(4, 'E04', 'POLYGON((2 0, 3 0, 3 1, 2 1, 2 0))','Salle de TD', 0),
+	(5, 'WC', 'POLYGON((2 0, 3 0, 3 -1, 2 -1, 2 0))','Toilettes', 0),
+	(6, 'Infirmerie', 'POLYGON((2 -1, 3 -1, 3 -2, 2 -2, 2 -1))','Infirmerie', 0),
+	(7, 'Bureau directeur', 'POLYGON((2 0, 3 0, 3 1, 2 1, 2 0))','Administration', 1),
+	(8, 'Secretariat', 'POLYGON((2 0, 3 0, 3 -1, 2 -1, 2 0))','Administration', 1),
+	(9, 'Salle de réunion', 'POLYGON((0 0, 1 0, 1 -1, 0 -1, 0 0))','Administration', 1),
+	(10, 'E11', 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))','Salle de TD', 1);
 
 INSERT INTO Escalier VALUES
 	(1, 'POLYGON((0 1, 1 1, 1 1.5, 0 1.5, 0 1))', 0, 1),
 	(2, 'POLYGON((0 1, 1 1, 1 1.5, 0 1.5, 0 1))', 1, 0);
 
-INSERT INTO CHEMIN VALUES
-	(1, 'GEOMETRYCOLLECTION(POINT(1.1 1.25), POINT(1.1 0.5), POINT(1.1 -0.5), POINT(1.1 -1.5),
-	POINT(1.9 -1.5), POINT(1.9 -0.5), POINT(1.9 0.5))', 0),
-	(2, 'GEOMETRYCOLLECTION(POINT(1.1 1.25), POINT(1.1 0.5), POINT(1.1 -0.5), POINT(1.9 -0.5), POINT(1.9 0.5))', 1);
+
+INSERT INTO Voisin_Salle_Escalier VALUES
+	(1, 1),
+	(10, 1);
+
+INSERT INTO Voisin_Escalier_Escalier VALUES
+	(1, 2);
+
+INSERT INTO Voisin_Salle_Salle VALUES
+	(1, 4),
+	(1, 2),
+	(2, 3),
+	(2, 5),
+	(3, 6),
+	(4, 5),
+	(5, 6),
+	(10, 7),
+	(10, 9),
+	(9, 8),
+	(7, 8);
