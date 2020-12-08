@@ -9,7 +9,7 @@ var map = new Map({
       new Tile({
         title: 'Global Imagery',
         source: new TileWMS({
-          url: 'http://192.168.1.21:8080/geoserver/wms',
+          url: 'http://172.17.0.1:8080/geoserver/wms',
           crossOrigin: 'anonymous' ,
           params: {LAYERS: 'SIG:SalleE0,SIG:EscalierE0', TILED: true}
         })

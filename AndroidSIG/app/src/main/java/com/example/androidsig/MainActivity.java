@@ -20,6 +20,6 @@ public class MainActivity extends AppCompatActivity {
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.setWebContentsDebuggingEnabled(true);
         myWebView.getSettings().setUseWideViewPort(true);
-        myWebView.loadUrl("http://192.168.1.21:1234");
+        myWebView.loadUrl("http://172.17.0.1:1234");
     }
 }
