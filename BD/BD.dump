@@ -20,13 +20,17 @@ CREATE TABLE Escalier(
 );
 
 CREATE TABLE Voisin_Salle_Salle(
-	idSalle1 integer NOT NULL REFERENCES Salle(id),
-	idSalle2 integer NOT NULL REFERENCES Salle(id)
+	idSalleCourante integer NOT NULL REFERENCES Salle(id),
+	idVoisinDroit integer REFERENCES Salle(id),
+	idVoisinGauche integer REFERENCES Salle(id),
+	idVoisinFace integer REFERENCES Salle(id)
 );
 
 CREATE TABLE Voisin_Salle_Escalier(
-	idSalle integer NOT NULL REFERENCES Salle(id),
-	idEscalier integer NOT NULL REFERENCES Escalier(id)
+	idSalleCourante integer NOT NULL REFERENCES Salle(id),
+	idEscalierDroit integer  REFERENCES Escalier(id),
+	idEscalierGauche integer  REFERENCES Escalier(id),
+	idEscalierFace integer  REFERENCES Escalier(id)
 );
 
 CREATE TABLE Voisin_Escalier_Escalier(
@@ -54,22 +58,21 @@ INSERT INTO Escalier VALUES
 	(2, 'POLYGON((0 1, 1 1, 1 1.5, 0 1.5, 0 1))', 1, 0);
 
 
-INSERT INTO Voisin_Salle_Escalier VALUES
-	(1, 1),
-	(10, 1);
-
-INSERT INTO Voisin_Escalier_Escalier VALUES
-	(1, 2);
-
 INSERT INTO Voisin_Salle_Salle VALUES
-	(1, 4),
-	(1, 2),
-	(2, 3),
-	(2, 5),
-	(3, 6),
-	(4, 5),
-	(5, 6),
-	(10, 7),
-	(10, 9),
-	(9, 8),
-	(7, 8);
+	(1, 2, NULL, 4),
+	(2, 3, 1, 5),
+	(3, NULL, 2, 6),
+	(4, null, 5, 1),
+	(5, 4, 6, 2),
+	(6, 5, null, 3),
+	(7, null, 8, 10),
+	(8, 7, null, 9),
+	(9, null, 10, 9),
+	(10, 9, null, 7);
+
+INSERT INTO Voisin_Salle_Escalier VALUES
+	(1, 1, null, null),
+	(10, 2, null, null);
+
+INSERT into Voisin_Escalier_Escalier VALUES
+	(1, 2);
