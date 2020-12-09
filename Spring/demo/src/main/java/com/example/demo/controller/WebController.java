@@ -33,10 +33,10 @@ public class WebController {
     }
 
     @PostMapping("/update")
-    public String update(@RequestParam(value = "fonction") String fonction, @RequestParam(value = "id") long id, Model model){
+    public String update(@RequestParam(value = "nom") String fonction, @RequestParam(value = "id") long id, Model model){
         Salle salle = salleService.getSalle(id);
 
-        salle.setFonction(fonction);
+        salle.setNom(fonction);
         salleService.saveSalle(salle);
         return "redirect:/salles";
     }

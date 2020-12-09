@@ -26,7 +26,7 @@ if(query.includes('etage0')){
     view: new View({
       projection: 'EPSG:4326',
       center: [0, 0],
-      zoom: 5,
+      zoom: 6,
       maxResolution: 0.703125
     })
   });
@@ -46,7 +46,7 @@ if(query.includes('etage0')){
     view: new View({
       projection: 'EPSG:4326',
       center: [0, 0],
-      zoom: 5,
+      zoom: 6,
       maxResolution: 0.703125
     })
   });
@@ -66,7 +66,7 @@ if(query.includes('etage0')){
     view: new View({
       projection: 'EPSG:4326',
       center: [0, 0],
-      zoom: 5,
+      zoom: 6,
       maxResolution: 0.703125
     })
   });

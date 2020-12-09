@@ -1,16 +1,12 @@
-package com.example.demo.modele;
+package com.example.androidsig.modele;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.io.Serializable;
+import androidx.annotation.NonNull;
 
-@Entity
-public class Salle implements Serializable {
-    @Id
-    private Long id;
+public class Salle{
+    private long id;
     private String type_salle;
     private String nom;
-    private Integer etage;
+    private int etage;
 
     public Salle(){}
 
@@ -19,6 +15,12 @@ public class Salle implements Serializable {
         this.type_salle = type_salle;
         this.nom = nom;
         this.etage = etage;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "id: " + this.id + ", type_salle: " + this.type_salle + ", nom: " + this.nom;
     }
 
     public long getId() {
