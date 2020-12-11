@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Voisin currentVoisin;
     private WebView myWebView;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
         this.loadData();
 
 
-        myWebView = (WebView) findViewById(R.id.webview);
+        myWebView = findViewById(R.id.webview);
         myWebView.getSettings().setLoadWithOverviewMode(true);
         myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(true);
         myWebView.getSettings().setUseWideViewPort(true);
         myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
 
@@ -67,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void updateView(){
-        TextView textView = (TextView) findViewById(R.id.textViewMain);
+        TextView textView = findViewById(R.id.textViewMain);
         textView.setText(currentSalle.getType_salle() + " : " + currentSalle.getNom());
         if(currentVoisin != null ){
-            textView = (TextView) findViewById(R.id.VoisinDroite);
+            textView = findViewById(R.id.VoisinDroite);
             if(currentVoisin.getVoisinD() != null){
                 if (currentVoisin.getVoisinD().getClass().equals(Salle.class)){
                     textView.setText(((Salle)currentVoisin.getVoisinD()).getNom());
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 textView.setText("Pas de voisin");
             }
-            textView = (TextView) findViewById(R.id.VoisinGauche);
+            textView = findViewById(R.id.VoisinGauche);
             if(currentVoisin.getVoisinG() != null){
                 if (currentVoisin.getVoisinG().getClass().equals(Salle.class)){
                     textView.setText(((Salle)currentVoisin.getVoisinG()).getNom());
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 textView.setText("Pas de voisin");
             }
-            textView = (TextView) findViewById(R.id.VoisinFace);
+            textView = findViewById(R.id.VoisinFace);
             if(currentVoisin.getVoisinF() != null){
                 if (currentVoisin.getVoisinF().getClass().equals(Salle.class)){
                     textView.setText(((Salle)currentVoisin.getVoisinF()).getNom());
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class SpringRest extends AsyncTask<URL, Void, JSONArray>{
 
         @Override
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             finally {
+                assert connection != null;
                 connection.disconnect();
             }
             return null;
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(currentSalle == null){
-            this.currentSalle = salleList.get(9);
+            this.currentSalle = salleList.get(0);
             try {
                 new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
             } catch (MalformedURLException e) {
@@ -174,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class RestVoisin extends AsyncTask<URL, Void, Voisin>{
 
         @Override
@@ -226,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Escalier",""+ reponse);
                 if(reponse == HttpURLConnection.HTTP_OK){
                     JSONObject object = getText(connection.getInputStream());
+                    assert object != null;
                     int id = object.getInt("escalier");
                     URL url = new URL("http://192.168.1.21:8081/rest/Escalier/" + id);
                     connection.disconnect();
@@ -268,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
             } finally {
+                assert connection != null;
                 connection.disconnect();
             }
             return null;
@@ -298,6 +305,46 @@ public class MainActivity extends AppCompatActivity {
     private void updateVoisin(Voisin voisin) {
         this.currentVoisin = voisin;
         this.updateView();
+    }
+
+    public void deplacementFace(View view){
+        if(currentVoisin.getVoisinF() != null){
+            if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                currentSalle = (Salle) currentVoisin.getVoisinF();
+                try {
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void deplacementDroite(View view){
+        if(currentVoisin.getVoisinD() != null) {
+            if (currentVoisin.getVoisinD().getClass().equals(Salle.class)) {
+                currentSalle = (Salle) currentVoisin.getVoisinD();
+                try {
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()), new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void deplacementGauche(View view){
+        if(currentVoisin.getVoisinG() != null){
+            if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                currentSalle = (Salle) currentVoisin.getVoisinG();
+                try {
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 
