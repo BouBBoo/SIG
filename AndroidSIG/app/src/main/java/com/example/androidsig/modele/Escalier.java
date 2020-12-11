@@ -1,30 +1,17 @@
-package com.example.demo.modele;
+package com.example.androidsig.modele;
 
-import org.postgis.Geometry;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Escalier {
-    @Id
-    private Long id;
+    private int id;
     private int etage_courant;
     private int etage_destination;
 
     public Escalier(){}
 
-    public Escalier(Long id, Geometry geometry, int etage_courant, int etage_destination) {
-        this.id = id;
-        this.etage_courant = etage_courant;
-        this.etage_destination = etage_destination;
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

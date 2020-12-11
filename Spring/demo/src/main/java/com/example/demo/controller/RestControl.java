@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.modele.Escalier;
 import com.example.demo.modele.Salle;
 import com.example.demo.modele.Voisin;
+import com.example.demo.modele.VoisinEscalier;
+import com.example.demo.service.EscalierService;
 import com.example.demo.service.SalleService;
 import com.example.demo.service.VoisinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class RestControl {
 
     @Autowired
     VoisinService voisinService;
+
+    @Autowired
+    EscalierService escalierService;
     
     @RequestMapping("/rest/salles")
     public List<Salle> findAll(){
@@ -35,5 +41,15 @@ public class RestControl {
     public Salle findSalle(@PathVariable(value = "id") long id){
         System.out.println(id);
         return salleService.findSalle(id);
+    }
+
+    @RequestMapping("/rest/salles/escalier/{id}")
+    public VoisinEscalier findVoisinEscalier(@PathVariable(value = "id") long id){
+        return voisinService.findEscalierVoisin(id);
+    }
+    @RequestMapping("/rest/Escalier/{id}")
+    public Escalier findEscalier(@PathVariable(value = "id") long id){
+        System.out.println(id);
+        return escalierService.findEscalier(id);
     }
 }

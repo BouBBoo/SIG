@@ -1,7 +1,9 @@
 DROP TABLE VOISIN;
 DROP TABLE EscalierJoint;
+DROP TABLE VOISIN_ESCALIER;
 DROP TABLE SALLE;
 DROP TABLE ESCALIER;
+
 
 CREATE TABLE Salle(
 	id integer PRIMARY KEY,
@@ -23,6 +25,12 @@ CREATE TABLE Voisin(
 	idVoisinD integer REFERENCES Salle(id),
 	idVoisinG integer REFERENCES Salle(id),
 	idVoisinF integer REFERENCES Salle(id)
+);
+
+CREATE TABLE VOISIN_ESCALIER(
+    id integer NOT NULL PRIMARY KEY REFERENCES Salle(id),
+    idEscalier integer REFERENCES Escalier(id),
+    direction varchar
 );
 
 CREATE TABLE EscalierJoint(
@@ -64,3 +72,7 @@ INSERT INTO Voisin VALUES
 INSERT INTO EscalierJoint VALUES
     (11, 12),
     (12, 11);
+
+INSERT INTO VOISIN_ESCALIER VALUES
+    (1, 11, 'gauche'),
+    (10, 12, 'gauche');

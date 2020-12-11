@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidsig.modele.Escalier;
 import com.example.androidsig.modele.Salle;
 import com.example.androidsig.modele.Voisin;
 
@@ -71,19 +72,31 @@ public class MainActivity extends AppCompatActivity {
         if(currentVoisin != null ){
             textView = (TextView) findViewById(R.id.VoisinDroite);
             if(currentVoisin.getVoisinD() != null){
-                textView.setText(currentVoisin.getVoisinD().getNom());
+                if (currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                    textView.setText(((Salle)currentVoisin.getVoisinD()).getNom());
+                }else if (currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
+                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinD()).getId());
+                }
             }else{
                 textView.setText("Pas de voisin");
             }
             textView = (TextView) findViewById(R.id.VoisinGauche);
             if(currentVoisin.getVoisinG() != null){
-                textView.setText(currentVoisin.getVoisinG().getNom());
+                if (currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                    textView.setText(((Salle)currentVoisin.getVoisinG()).getNom());
+                }else if (currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
+                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinG()).getId());
+                }
             }else{
                 textView.setText("Pas de voisin");
             }
             textView = (TextView) findViewById(R.id.VoisinFace);
             if(currentVoisin.getVoisinF() != null){
-                textView.setText(currentVoisin.getVoisinF().getNom());
+                if (currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                    textView.setText(((Salle)currentVoisin.getVoisinF()).getNom());
+                }else if (currentVoisin.getVoisinF().getClass().equals(Escalier.class)){
+                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinF()).getId());
+                }
             }else{
                 textView.setText("Pas de voisin");
             }
@@ -151,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if(currentSalle == null){
-            this.currentSalle = salleList.get(0);
+            this.currentSalle = salleList.get(9);
             try {
-                new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()));
+                new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -166,66 +179,101 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Voisin doInBackground(URL... urls) {
             HttpURLConnection connection = null;
-            try{
+            try {
                 connection = (HttpURLConnection) urls[0].openConnection();
                 int reponse = connection.getResponseCode();
-                Log.d("REST",""+reponse);
-
-                if(reponse == HttpURLConnection.HTTP_OK){
+                Log.d("REST", "" + reponse);
+                List<Object> Voisins = new ArrayList<>();
+                if (reponse == HttpURLConnection.HTTP_OK) {
                     StringBuilder stringBuilder = new StringBuilder();
-                    try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                         String line;
-                        while ((line = reader.readLine()) != null){
+                        while ((line = reader.readLine()) != null) {
                             stringBuilder.append(line);
                         }
                     }
-                    List<Salle> salles = new ArrayList<>();
                     JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-                    String[] list = {"idvoisind","idvoising","idvoisinf"};
-                    for(int i = 0; i < 3; i++){
+                    String[] list = {"idvoisind", "idvoising", "idvoisinf"};
+                    for (int i = 0; i < 3; i++) {
                         int id = jsonObject.getInt(list[i]);
-                        if(id == 0){
-                            salles.add(null);
-                        }else{
+                        if (id == 0) {
+                            Voisins.add(null);
+                        } else {
                             URL url = new URL("http://192.168.1.21:8081/rest/salles/" + id);
                             connection.disconnect();
                             connection = (HttpURLConnection) url.openConnection();
                             reponse = connection.getResponseCode();
-                            if(reponse == HttpURLConnection.HTTP_OK) {
+                            if (reponse == HttpURLConnection.HTTP_OK) {
                                 JSONObject object = getText(connection.getInputStream());
-                                if(object == null){
-                                    salles.add(null);
-                                }else{
+                                if (object == null) {
+                                    Voisins.add(null);
+                                } else {
                                     Salle salle = new Salle();
                                     salle.setId(object.getInt("id"));
                                     salle.setNom(object.getString("nom"));
                                     salle.setEtage(object.getInt("etage"));
                                     salle.setType_salle(object.getString("type_salle"));
 
-                                    salles.add(salle);
+                                    Voisins.add(salle);
                                 }
                             }
                         }
                     }
+                }
+                connection.disconnect();
+                connection = (HttpURLConnection) urls[1].openConnection();
+                reponse = connection.getResponseCode();
+                Log.d("Escalier",""+ reponse);
+                if(reponse == HttpURLConnection.HTTP_OK){
+                    JSONObject object = getText(connection.getInputStream());
+                    int id = object.getInt("escalier");
+                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/" + id);
+                    connection.disconnect();
+                    connection = (HttpURLConnection) url.openConnection();
+                    reponse = connection.getResponseCode();
+                    Log.d("Escalier",""+ reponse);
+                    if(reponse == HttpURLConnection.HTTP_OK){
+                        JSONObject new_object = getText(connection.getInputStream());
+                        if(new_object != null){
+                            Escalier escalier = new Escalier();
+                            escalier.setEtage_courant(new_object.getInt("etage_courant"));
+                            escalier.setEtage_destination(new_object.getInt("etage_destination"));
+                            escalier.setId(new_object.getInt("id"));
 
-                    Voisin voisin = new Voisin();
-                    voisin.setVoisinD(salles.get(0));
-                    voisin.setVoisinG(salles.get(1));
-                    voisin.setVoisinF(salles.get(2));
-                    return voisin;
+                            String direction = object.getString("direction");
+                            switch (direction){
+                                case "droite":
+                                    Voisins.set(0, escalier);
+                                    break;
+                                case "gauche":
+                                    Voisins.set(1, escalier);
+                                    break;
+                                case "face":
+                                    Voisins.set(2, escalier);
+                                    break;
+                            }
+                        }
+                    }
                 }
 
-                } catch (IOException ioException) {
+
+                Voisin voisin = new Voisin();
+                voisin.setVoisinD(Voisins.get(0));
+                voisin.setVoisinG(Voisins.get(1));
+                voisin.setVoisinF(Voisins.get(2));
+                return voisin;
+
+            } catch (IOException ioException) {
                 ioException.printStackTrace();
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
-            }finally {
+            } finally {
                 connection.disconnect();
             }
             return null;
         }
 
-        private JSONObject getText(InputStream inputStream){
+            private JSONObject getText(InputStream inputStream){
             StringBuilder stringBuilder = new StringBuilder();
             try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
                 String line;
