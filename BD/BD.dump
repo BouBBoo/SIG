@@ -1,9 +1,9 @@
 DROP TABLE VOISIN;
-DROP TABLE EscalierJoint;
 DROP TABLE VOISIN_ESCALIER;
 DROP TABLE Escalier_Salle;
 DROP TABLE SALLE;
 DROP TABLE ESCALIER;
+DROP TABLE POSITION;
 
 
 CREATE TABLE Salle(
@@ -39,6 +39,11 @@ CREATE TABLE Escalier_Salle(
     idVoisinD integer REFERENCES Salle(id),
     idVoisinF integer REFERENCES Escalier(id),
     idVoisinG integer REFERENCES Salle(id)
+);
+
+CREATE TABLE POSITION(
+    id integer PRIMARY KEY,
+    geom geometry
 );
 
 
@@ -78,3 +83,6 @@ INSERT INTO VOISIN_ESCALIER VALUES
 INSERT INTO Escalier_Salle VALUES
     (11, 1, 12, 0),
     (12, 10, 11, 0);
+
+INSERT INTO POSITION VALUES
+    (1, 'POINT(0.5 0.5)');
