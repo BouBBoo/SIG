@@ -44,13 +44,11 @@ public class RestControl {
 
     @RequestMapping("/rest/salles/voisins/{id}")
     public Voisin findVoisin(@PathVariable(value = "id") long id){
-        System.out.println(id);
         return voisinService.findSalleVoisin(id);
     }
 
     @RequestMapping("/rest/salles/{id}")
     public Salle findSalle(@PathVariable(value = "id") long id){
-        System.out.println(id);
         return salleService.findSalle(id);
     }
 
@@ -60,7 +58,6 @@ public class RestControl {
     }
     @RequestMapping("/rest/Escalier/{id}")
     public Escalier findEscalier(@PathVariable(value = "id") long id){
-        System.out.println(id);
         return escalierService.findEscalier(id);
     }
 
@@ -74,20 +71,29 @@ public class RestControl {
         return positionService.findPosition();
     }
 
-    @PostMapping("/rest/position/{id}/{direction}/{typesallesrc}/{typesalledest}")
+    @RequestMapping("/rest/position/{id}/{direction}/{typesallesrc}/{typesalledest}")
     public void updateLocalisation(@PathVariable(value = "id") long id, @PathVariable(value = "direction") String direction
             , @PathVariable(value = "typesallesrc") String typesallesrc, @PathVariable(value = "typesalledest") String typesalledest){
         Position position = positionService.findPosition();
         Coordinate coordinate = new Coordinate();
         coordinate.x = position.getGeom().getCoordinate().x;
         coordinate.y = position.getGeom().getCoordinate().y;
+        System.out.println("Yes");
         if(typesalledest.equals(typesallesrc) && typesallesrc.equals("salle")){
             switch (direction){
                 case "left":
-                    coordinate.y -= 1;
+                    if(coordinate.x == 0.5){
+                        coordinate.y += 1;
+                    }else{
+                        coordinate.y -= 1;
+                    }
                     break;
                 case "right":
-                    coordinate.y += 1;
+                    if(coordinate.x == 0.5){
+                        coordinate.y -= 1;
+                    }else{
+                        coordinate.y += 1;
+                    }
                     break;
                 case "face":
                     if(coordinate.x == 0.5){
@@ -103,10 +109,19 @@ public class RestControl {
         }else if(!typesalledest.equals(typesallesrc)){
             switch (direction){
                 case "left":
-                    coordinate.y -= 0.75;
+                    if(coordinate.x == 0.5){
+                        coordinate.y += 0.75;
+                    }else{
+                        coordinate.y -= 0.75;
+                    }
                     break;
                 case "right":
-                    coordinate.y += 0.75;
+                    if(coordinate.x == 0.5){
+                        coordinate.y -= 0.75;
+                    }else{
+                        coordinate.y += 0.75;
+                    }
+
                     break;
             }
             Point point = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoisinService {
@@ -31,8 +32,13 @@ public class VoisinService {
     }
 
     public VoisinEscalier findEscalierVoisin(long id){
-        VoisinEscalier voisinEscalier = this.voisinEscalierRepository.findById(id).get();
-        return voisinEscalier;
+        Optional<VoisinEscalier> byId = this.voisinEscalierRepository.findById(id);
+        if(byId.isEmpty()){
+            return null;
+        }else{
+            return byId.get();
+        }
+
     }
 
     public EscalierSalle findEscalierSalle(long id){

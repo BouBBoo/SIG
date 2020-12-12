@@ -3,7 +3,7 @@ import {Map, View} from 'ol';
 import Tile from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 
-const url = 'http://172.17.0.1:8080/geoserver/wms';
+const url = 'http://192.168.1.21:8080/geoserver/wms';
 
 const query = window.location.href;
 
@@ -19,7 +19,7 @@ if(query.includes('etage0')){
         source: new TileWMS({
           url: url,
           crossOrigin: 'anonymous' ,
-          params: {LAYERS: 'SIG:SalleE0,SIG:EscalierE0', TILED: true}
+          params: {LAYERS: 'SIG:SalleE0,SIG:EscalierE0,SIG:position', TILED: true}
         })
       })
     ],
@@ -39,7 +39,7 @@ if(query.includes('etage0')){
         source: new TileWMS({
           url: url,
           crossOrigin: 'anonymous' ,
-          params: {LAYERS: 'SIG:SalleE1,SIG:EscalierE1', TILED: true}
+          params: {LAYERS: 'SIG:SalleE1,SIG:EscalierE1,SIG:position', TILED: true}
         })
       })
     ],
@@ -59,7 +59,7 @@ if(query.includes('etage0')){
         source: new TileWMS({
           url: url,
           crossOrigin: 'anonymous' ,
-          params: {LAYERS: 'SIG:SalleE0,SIG:EscalierE0,SIG:SalleE1,SIG:EscalierE1', TILED: true}
+          params: {LAYERS: 'SIG:SalleE0,SIG:EscalierE0,SIG:SalleE1,SIG:EscalierE1,SIG:position', TILED: true}
         })
       })
     ],

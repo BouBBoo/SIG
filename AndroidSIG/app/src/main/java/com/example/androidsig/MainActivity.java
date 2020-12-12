@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String genericUrl = "http://172.17.0.1:8081/rest/";
+    private String genericUrl = "http://192.168.1.21:8081/rest/";
     private List<Salle> salleList;
     private List<Escalier> escalierList;
     private Object currentSalle;
@@ -157,6 +157,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+        if(currentSalle.getClass().equals(Salle.class)){
+            if(((Salle)currentSalle).getEtage() == 0){
+                myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
+            }else{
+                myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
+            }
+        }else {
+            if(((Escalier)currentSalle).getEtage_courant() == 0){
+                myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
+            }else{
+                myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
+            }
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -183,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             finally {
-                assert connection != null;
                 connection.disconnect();
             }
             return null;
@@ -220,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             finally {
-                assert connection != null;
                 connection.disconnect();
             }
             return null;
@@ -307,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                             connection.disconnect();
                             connection = (HttpURLConnection) url.openConnection();
                             reponse = connection.getResponseCode();
+
                             if (reponse == HttpURLConnection.HTTP_OK) {
                                 JSONObject object = getText(connection.getInputStream());
                                 if (object == null) {
@@ -329,31 +341,33 @@ public class MainActivity extends AppCompatActivity {
                 reponse = connection.getResponseCode();
                 if(reponse == HttpURLConnection.HTTP_OK){
                     JSONObject object = getText(connection.getInputStream());
-                    assert object != null;
-                    int id = object.getInt("escalier");
-                    URL url = new URL(genericUrl + "Escalier/" + id);
-                    connection.disconnect();
-                    connection = (HttpURLConnection) url.openConnection();
-                    reponse = connection.getResponseCode();
-                    if(reponse == HttpURLConnection.HTTP_OK){
-                        JSONObject new_object = getText(connection.getInputStream());
-                        if(new_object != null){
-                            Escalier escalier = new Escalier();
-                            escalier.setEtage_courant(new_object.getInt("etage_courant"));
-                            escalier.setEtage_destination(new_object.getInt("etage_destination"));
-                            escalier.setId(new_object.getInt("id"));
+                    if(object != null){
+                        int id = object.getInt("escalier");
+                        URL url = new URL(genericUrl + "Escalier/" + id);
+                        connection.disconnect();
+                        connection = (HttpURLConnection) url.openConnection();
+                        reponse = connection.getResponseCode();
+                        Log.d("Code ", ""+reponse);
+                        if(reponse == HttpURLConnection.HTTP_OK){
+                            JSONObject new_object = getText(connection.getInputStream());
+                            if(new_object != null){
+                                Escalier escalier = new Escalier();
+                                escalier.setEtage_courant(new_object.getInt("etage_courant"));
+                                escalier.setEtage_destination(new_object.getInt("etage_destination"));
+                                escalier.setId(new_object.getInt("id"));
 
-                            String direction = object.getString("direction");
-                            switch (direction){
-                                case "droite":
-                                    Voisins.set(0, escalier);
-                                    break;
-                                case "gauche":
-                                    Voisins.set(1, escalier);
-                                    break;
-                                case "face":
-                                    Voisins.set(2, escalier);
-                                    break;
+                                String direction = object.getString("direction");
+                                switch (direction){
+                                    case "droite":
+                                        Voisins.set(0, escalier);
+                                        break;
+                                    case "gauche":
+                                        Voisins.set(1, escalier);
+                                        break;
+                                    case "face":
+                                        Voisins.set(2, escalier);
+                                        break;
+                                }
                             }
                         }
                     }
@@ -371,7 +385,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
             } finally {
-                assert connection != null;
                 connection.disconnect();
             }
             return null;
@@ -384,7 +397,12 @@ public class MainActivity extends AppCompatActivity {
             while ((line = reader.readLine()) != null){
                 stringBuilder.append(line);
             }
-            return new JSONObject(stringBuilder.toString());
+            if(!stringBuilder.toString().equals("")){
+                return new JSONObject(stringBuilder.toString());
+            }else{
+                return null;
+            }
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -406,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deplacementFace(View view){
         if(currentVoisin.getVoisinF() != null){
+            updateLocalisation("face");
             if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinF();
                 try {
@@ -416,11 +435,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 currentSalle = currentVoisin.getVoisinF();
                 currentVoisin = new Voisin();
-                if(((Escalier)currentSalle).getEtage_courant() == 0){
-                    myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
-                }else{
-                    myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
-                }
+
                 try {
                     URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
@@ -433,6 +448,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deplacementDroite(View view){
         if(currentVoisin.getVoisinD() != null) {
+            updateLocalisation("right");
             if (currentVoisin.getVoisinD().getClass().equals(Salle.class)) {
                 currentSalle = currentVoisin.getVoisinD();
                 try {
@@ -455,6 +471,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void deplacementGauche(View view){
         if(currentVoisin.getVoisinG() != null){
+            updateLocalisation("left");
             if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinG();
                 try {
@@ -473,6 +490,66 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+        }
+    }
+
+    private void updateLocalisation(String direction) {
+        String url = genericUrl + "position/1/" + direction + "/";
+        if(currentSalle.getClass().equals(Escalier.class)){
+            url += "escalier/";
+        }else{
+            url += "salle/";
+        }
+        switch (direction){
+            case "left":
+                if(currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
+                    url += "escalier";
+                }else{
+                    url += "salle";
+                }
+                break;
+            case "right":
+                if(currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
+                    url += "escalier";
+                }else{
+                    url += "salle";
+                }
+                break;
+            case "face":
+                if(currentVoisin.getVoisinF().getClass().equals(Escalier.class)){
+                    url += "escalier";
+                }else{
+                    url += "salle";
+                }
+                break;
+        }
+
+        URL newurl = null;
+        try {
+            newurl = new URL(url);
+            new UpdateLocalisation().execute(newurl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private class UpdateLocalisation extends AsyncTask<URL, Void, Void> {
+
+        @Override
+        protected Void doInBackground(URL... urls) {
+            HttpURLConnection connection = null;
+            try {
+                connection = (HttpURLConnection) urls[0].openConnection();
+                int reponse = connection.getResponseCode();
+
+                if(reponse == HttpURLConnection.HTTP_OK){
+                    //TODO
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
