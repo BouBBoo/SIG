@@ -32,11 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private String genericUrl = "http://172.17.0.1:8081/rest/";
     private List<Salle> salleList;
     private List<Escalier> escalierList;
     private Object currentSalle;
     private Voisin currentVoisin;
     private WebView myWebView;
+    // ----->
+    private List<Object> parcoursTemporaire;
+    // <-----
 
     @SuppressLint("SetJavaScriptEnabled")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -58,14 +62,13 @@ public class MainActivity extends AppCompatActivity {
         WebView.setWebContentsDebuggingEnabled(true);
         myWebView.getSettings().setUseWideViewPort(true);
         myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
-
     }
 
     private void loadData(){
         try {
-            URL url = new URL("http://192.168.1.21:8081/rest/salles");
+            URL url = new URL(genericUrl + "salles");
             new SpringRestSalle().execute(url);
-            url = new URL("http://192.168.1.21:8081/rest/escalier");
+            url = new URL(genericUrl + "escalier");
             new SpringRestEscalier().execute(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -267,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentSalle == null){
             this.currentSalle = salleList.get(0);
             try {
-                new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -300,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                         if (id == 0) {
                             Voisins.add(null);
                         } else {
-                            URL url = new URL("http://192.168.1.21:8081/rest/salles/" + id);
+                            URL url = new URL(genericUrl + "salles/" + id);
                             connection.disconnect();
                             connection = (HttpURLConnection) url.openConnection();
                             reponse = connection.getResponseCode();
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject object = getText(connection.getInputStream());
                     assert object != null;
                     int id = object.getInt("escalier");
-                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/" + id);
+                    URL url = new URL(genericUrl + "Escalier/" + id);
                     connection.disconnect();
                     connection = (HttpURLConnection) url.openConnection();
                     reponse = connection.getResponseCode();
@@ -406,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
             if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinF();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -419,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
                     myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
                 }
                 try {
-                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -433,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
             if (currentVoisin.getVoisinD().getClass().equals(Salle.class)) {
                 currentSalle = currentVoisin.getVoisinD();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()), new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()), new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -441,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                 currentSalle = currentVoisin.getVoisinF();
                 currentVoisin = new Voisin();
                 try {
-                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -455,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
             if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinG();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -463,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
                 currentSalle = currentVoisin.getVoisinG();
                 currentVoisin = new Voisin();
                 try {
-                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -518,6 +521,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ----->
+    private class navigationParcoursLargeur {
+
+        protected ArrayList<Object> parcoursToSalle(Object current) {
+            System.out.println("Test");
+            System.out.println(salleList);
+            System.out.println(escalierList);
+            return null;
+        }
+
+    }
+    // <-----
+
     private void setVoisinEscalier(EscalierSalle escalier) {
         if(escalier != null){
             currentVoisin.setVoisinF(getEscalierFromId(escalier.getIdvoisinf()));
@@ -545,5 +561,15 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    // ----->
+    private ArrayList<Object> setPlusCourtChemin(Object current) {
+        navigationParcoursLargeur navClass = new navigationParcoursLargeur();
+        return navClass.parcoursToSalle(current);
+    }
+
+    public void TempoFuncForNav(View view) {
+        System.out.println(setPlusCourtChemin(currentSalle));
+    }
+    // <-----
 
 }

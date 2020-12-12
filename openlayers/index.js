@@ -3,7 +3,7 @@ import {Map, View} from 'ol';
 import Tile from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 
-const url = 'http://192.168.1.21:8080/geoserver/wms';
+const url = 'http://172.17.0.1:8080/geoserver/wms';
 
 const query = window.location.href;
 
