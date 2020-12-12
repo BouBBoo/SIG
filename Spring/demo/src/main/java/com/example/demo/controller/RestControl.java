@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.modele.Escalier;
-import com.example.demo.modele.Salle;
-import com.example.demo.modele.Voisin;
-import com.example.demo.modele.VoisinEscalier;
+import com.example.demo.modele.*;
 import com.example.demo.service.EscalierService;
 import com.example.demo.service.SalleService;
 import com.example.demo.service.VoisinService;
@@ -27,8 +24,13 @@ public class RestControl {
     EscalierService escalierService;
     
     @RequestMapping("/rest/salles")
-    public List<Salle> findAll(){
+    public List<Salle> findAllSalles(){
         return salleService.findAll();
+    }
+
+    @RequestMapping("/rest/escalier")
+    public List<Escalier> findAllEscalier(){
+        return escalierService.findAll();
     }
 
     @RequestMapping("/rest/salles/voisins/{id}")
@@ -51,5 +53,10 @@ public class RestControl {
     public Escalier findEscalier(@PathVariable(value = "id") long id){
         System.out.println(id);
         return escalierService.findEscalier(id);
+    }
+
+    @RequestMapping("/rest/Escalier/joint/{id}")
+    public EscalierSalle findEscalierSalle(@PathVariable(value = "id") long id){
+        return voisinService.findEscalierSalle(id);
     }
 }

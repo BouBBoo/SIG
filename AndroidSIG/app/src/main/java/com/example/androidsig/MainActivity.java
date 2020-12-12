@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidsig.modele.Escalier;
+import com.example.androidsig.modele.EscalierSalle;
 import com.example.androidsig.modele.Salle;
 import com.example.androidsig.modele.Voisin;
 
@@ -32,7 +33,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private List<Salle> salleList;
-    private Salle currentSalle;
+    private List<Escalier> escalierList;
+    private Object currentSalle;
     private Voisin currentVoisin;
     private WebView myWebView;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         salleList = new ArrayList<>();
         currentSalle = null;
         currentVoisin = null;
+        escalierList = new ArrayList<>();
 
         this.loadData();
 
@@ -61,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private void loadData(){
         try {
             URL url = new URL("http://192.168.1.21:8081/rest/salles");
-            new SpringRest().execute(url);
+            new SpringRestSalle().execute(url);
+            url = new URL("http://192.168.1.21:8081/rest/escalier");
+            new SpringRestEscalier().execute(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -69,52 +74,90 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void updateView(){
-        TextView textView = findViewById(R.id.textViewMain);
-        textView.setText(currentSalle.getType_salle() + " : " + currentSalle.getNom());
-        if(currentVoisin != null ){
-            textView = findViewById(R.id.VoisinDroite);
-            if(currentVoisin.getVoisinD() != null){
-                if (currentVoisin.getVoisinD().getClass().equals(Salle.class)){
-                    textView.setText(((Salle)currentVoisin.getVoisinD()).getNom());
-                }else if (currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
-                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinD()).getId());
+        if(currentSalle.getClass().equals(Salle.class)){
+            Salle salle = (Salle) currentSalle;
+            TextView textView = findViewById(R.id.textViewMain);
+            textView.setText(salle.getType_salle() + " : " + salle.getNom());
+            if(currentVoisin != null ){
+                textView = findViewById(R.id.VoisinDroite);
+                if(currentVoisin.getVoisinD() != null){
+                    if (currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                        textView.setText(((Salle)currentVoisin.getVoisinD()).getNom());
+                    }else if (currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
+                        textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinD()).getId());
+                    }
+                }else{
+                    textView.setText("Pas de voisin");
                 }
-            }else{
-                textView.setText("Pas de voisin");
-            }
-            textView = findViewById(R.id.VoisinGauche);
-            if(currentVoisin.getVoisinG() != null){
-                if (currentVoisin.getVoisinG().getClass().equals(Salle.class)){
-                    textView.setText(((Salle)currentVoisin.getVoisinG()).getNom());
-                }else if (currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
-                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinG()).getId());
+                textView = findViewById(R.id.VoisinGauche);
+                if(currentVoisin.getVoisinG() != null){
+                    if (currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                        textView.setText(((Salle)currentVoisin.getVoisinG()).getNom());
+                    }else if (currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
+                        textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinG()).getId());
+                    }
+                }else{
+                    textView.setText("Pas de voisin");
                 }
-            }else{
-                textView.setText("Pas de voisin");
-            }
-            textView = findViewById(R.id.VoisinFace);
-            if(currentVoisin.getVoisinF() != null){
-                if (currentVoisin.getVoisinF().getClass().equals(Salle.class)){
-                    textView.setText(((Salle)currentVoisin.getVoisinF()).getNom());
-                }else if (currentVoisin.getVoisinF().getClass().equals(Escalier.class)){
-                    textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinF()).getId());
+                textView = findViewById(R.id.VoisinFace);
+                if(currentVoisin.getVoisinF() != null){
+                    if (currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                        textView.setText(((Salle)currentVoisin.getVoisinF()).getNom());
+                    }else if (currentVoisin.getVoisinF().getClass().equals(Escalier.class)){
+                        textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinF()).getId());
+                    }
+                }else{
+                    textView.setText("Pas de voisin");
                 }
-            }else{
-                textView.setText("Pas de voisin");
             }
+
+
+
+        }else{
+            Escalier escalier = (Escalier) currentSalle;
+            TextView textView = findViewById(R.id.textViewMain);
+            textView.setText("Escalier " + escalier.getId());
+
+            if(currentVoisin != null ){
+                textView = findViewById(R.id.VoisinDroite);
+                if(currentVoisin.getVoisinD() != null){
+                    if (currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                        textView.setText(((Salle)currentVoisin.getVoisinD()).getNom());
+                    }else if (currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
+                        textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinD()).getId());
+                    }
+                }else{
+                    textView.setText("Pas de voisin");
+                }
+                textView = findViewById(R.id.VoisinGauche);
+                if(currentVoisin.getVoisinG() != null){
+                    if (currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                        textView.setText(((Salle)currentVoisin.getVoisinG()).getNom());
+                    }else if (currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
+                        textView.setText("Escalier " + ((Escalier)currentVoisin.getVoisinG()).getId());
+                    }
+                }else{
+                    textView.setText("Pas de voisin");
+                }
+                textView = findViewById(R.id.VoisinFace);
+                if(currentVoisin.getVoisinF() != null){
+                    if(((Escalier)currentVoisin.getVoisinF()).getEtage_courant() == 0){
+                        textView.setText("Descendre");
+                    }else if(((Escalier)currentVoisin.getVoisinF()).getEtage_courant() == 1){
+                        textView.setText("Monter");
+                    }
+
+                }else{
+                    textView.setText("Pas de voisin");
+                }
+            }
+
+
         }
-
-
-        if(currentSalle.getEtage() == 0){
-            myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
-        }else if(currentSalle.getEtage() == 1){
-            myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
-        }
-
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class SpringRest extends AsyncTask<URL, Void, JSONArray>{
+    private class SpringRestSalle extends AsyncTask<URL, Void, JSONArray>{
 
         @Override
         protected JSONArray doInBackground(URL... urls) {
@@ -151,6 +194,60 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class SpringRestEscalier extends AsyncTask<URL, Void, JSONArray>{
+
+        @Override
+        protected JSONArray doInBackground(URL... urls) {
+            HttpURLConnection connection = null;
+            try{
+                connection = (HttpURLConnection) urls[0].openConnection();
+                int reponse = connection.getResponseCode();
+
+                if(reponse == HttpURLConnection.HTTP_OK){
+                    StringBuilder stringBuilder = new StringBuilder();
+                    try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                        String line;
+                        while ((line = reader.readLine()) != null){
+                            stringBuilder.append(line);
+                        }
+                    }
+                    return new JSONArray(stringBuilder.toString());
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            finally {
+                assert connection != null;
+                connection.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonObject) {
+            if(jsonObject != null){
+                updateListEscalier(jsonObject);
+            }
+        }
+    }
+
+    private void updateListEscalier(JSONArray jsonObject) {
+        escalierList.clear();
+        for (int i = 0; i < jsonObject.length(); i++){
+            try {
+                JSONObject object = jsonObject.getJSONObject(i);
+                Escalier escalier = new Escalier();
+                escalier.setEtage_destination(object.getInt("etage_destination"));
+                escalier.setEtage_courant(object.getInt("etage_courant"));
+                escalier.setId(object.getInt("id"));
+
+                escalierList.add(escalier);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void updateListSalle(JSONArray jsonArray) {
         salleList.clear();
         for (int i = 0; i < jsonArray.length(); i++){
@@ -170,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentSalle == null){
             this.currentSalle = salleList.get(0);
             try {
-                new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -187,7 +284,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 connection = (HttpURLConnection) urls[0].openConnection();
                 int reponse = connection.getResponseCode();
-                Log.d("REST", "" + reponse);
                 List<Object> Voisins = new ArrayList<>();
                 if (reponse == HttpURLConnection.HTTP_OK) {
                     StringBuilder stringBuilder = new StringBuilder();
@@ -228,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
                 connection.disconnect();
                 connection = (HttpURLConnection) urls[1].openConnection();
                 reponse = connection.getResponseCode();
-                Log.d("Escalier",""+ reponse);
                 if(reponse == HttpURLConnection.HTTP_OK){
                     JSONObject object = getText(connection.getInputStream());
                     assert object != null;
@@ -237,7 +332,6 @@ public class MainActivity extends AppCompatActivity {
                     connection.disconnect();
                     connection = (HttpURLConnection) url.openConnection();
                     reponse = connection.getResponseCode();
-                    Log.d("Escalier",""+ reponse);
                     if(reponse == HttpURLConnection.HTTP_OK){
                         JSONObject new_object = getText(connection.getInputStream());
                         if(new_object != null){
@@ -280,18 +374,18 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-            private JSONObject getText(InputStream inputStream){
-            StringBuilder stringBuilder = new StringBuilder();
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
-                String line;
-                while ((line = reader.readLine()) != null){
-                    stringBuilder.append(line);
-                }
-                return new JSONObject(stringBuilder.toString());
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
+        private JSONObject getText(InputStream inputStream){
+        StringBuilder stringBuilder = new StringBuilder();
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
+            String line;
+            while ((line = reader.readLine()) != null){
+                stringBuilder.append(line);
             }
-            return null;
+            return new JSONObject(stringBuilder.toString());
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
         }
 
         @Override
@@ -310,9 +404,23 @@ public class MainActivity extends AppCompatActivity {
     public void deplacementFace(View view){
         if(currentVoisin.getVoisinF() != null){
             if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
-                currentSalle = (Salle) currentVoisin.getVoisinF();
+                currentSalle = currentVoisin.getVoisinF();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                currentSalle = currentVoisin.getVoisinF();
+                currentVoisin = new Voisin();
+                if(((Escalier)currentSalle).getEtage_courant() == 0){
+                    myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
+                }else{
+                    myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
+                }
+                try {
+                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -323,9 +431,18 @@ public class MainActivity extends AppCompatActivity {
     public void deplacementDroite(View view){
         if(currentVoisin.getVoisinD() != null) {
             if (currentVoisin.getVoisinD().getClass().equals(Salle.class)) {
-                currentSalle = (Salle) currentVoisin.getVoisinD();
+                currentSalle = currentVoisin.getVoisinD();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()), new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()), new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                currentSalle = currentVoisin.getVoisinF();
+                currentVoisin = new Voisin();
+                try {
+                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -336,15 +453,96 @@ public class MainActivity extends AppCompatActivity {
     public void deplacementGauche(View view){
         if(currentVoisin.getVoisinG() != null){
             if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
-                currentSalle = (Salle) currentVoisin.getVoisinG();
+                currentSalle = currentVoisin.getVoisinG();
                 try {
-                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + currentSalle.getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + currentSalle.getId()));
+                    new RestVoisin().execute(new URL("http://192.168.1.21:8081/rest/salles/voisins/" + ((Salle)currentSalle).getId()),new URL("http://192.168.1.21:8081/rest/salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+            }else{
+                currentSalle = currentVoisin.getVoisinG();
+                currentVoisin = new Voisin();
+                try {
+                    URL url = new URL("http://192.168.1.21:8081/rest/Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    new EscalierJoint().execute(url);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
+    }
 
+    private class EscalierJoint extends AsyncTask<URL, Void, EscalierSalle>{
+
+        @Override
+        protected EscalierSalle doInBackground(URL... urls) {
+            HttpURLConnection connection = null;
+            try {
+                connection = (HttpURLConnection) urls[0].openConnection();
+                int response = connection.getResponseCode();
+                if(response == HttpURLConnection.HTTP_OK){
+                    JSONObject object = getText(connection.getInputStream());
+                    EscalierSalle escalierSalle = new EscalierSalle();
+                    escalierSalle.setIdvoisind(object.getInt("idvoisind"));
+                    escalierSalle.setIdvoising(object.getInt("idvoising"));
+                    escalierSalle.setIdvoisinf(object.getInt("idvoisinf"));
+
+                    return escalierSalle;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private JSONObject getText(InputStream inputStream){
+            StringBuilder stringBuilder = new StringBuilder();
+            try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))){
+                String line;
+                while ((line = reader.readLine()) != null){
+                    stringBuilder.append(line);
+                }
+                return new JSONObject(stringBuilder.toString());
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(EscalierSalle escalier) {
+            setVoisinEscalier(escalier);
+        }
+    }
+
+    private void setVoisinEscalier(EscalierSalle escalier) {
+        if(escalier != null){
+            currentVoisin.setVoisinF(getEscalierFromId(escalier.getIdvoisinf()));
+            currentVoisin.setVoisinG(getSalleFromId(escalier.getIdvoising()));
+            currentVoisin.setVoisinD(getSalleFromId(escalier.getIdvoisind()));
+            this.updateView();
+        }
+    }
+
+    private Salle getSalleFromId(int id){
+        for (Salle salle : salleList){
+            if(salle.getId() == id){
+                return salle;
+            }
+        }
+        return null;
+    }
+
+    private Escalier getEscalierFromId(int id){
+        for (Escalier escalier : escalierList){
+            if(escalier.getId() == id){
+                return escalier;
+            }
+        }
+        return null;
     }
 
 

@@ -29,7 +29,7 @@ public class Escalier {
     }
 
     public int getEtage_courant() {
-        return etage_courant;
+            return etage_courant;
     }
 
     public void setEtage_courant(int etage_courant) {

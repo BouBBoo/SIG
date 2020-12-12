@@ -1,6 +1,7 @@
 DROP TABLE VOISIN;
 DROP TABLE EscalierJoint;
 DROP TABLE VOISIN_ESCALIER;
+DROP TABLE Escalier_Salle;
 DROP TABLE SALLE;
 DROP TABLE ESCALIER;
 
@@ -17,7 +18,7 @@ CREATE TABLE Escalier(
 	id integer NOT NULL PRIMARY KEY,
 	geom geometry,
 	etage_courant integer NOT NULL,
-	etage_destination integer NOT NULL
+        etage_destination integer NOT NULL
 );
 
 CREATE TABLE Voisin(
@@ -33,9 +34,11 @@ CREATE TABLE VOISIN_ESCALIER(
     direction varchar
 );
 
-CREATE TABLE EscalierJoint(
-	idEscalier1 integer NOT NULL REFERENCES Escalier(id),
-	idEscalier2 integer REFERENCES Escalier(id)
+CREATE TABLE Escalier_Salle(
+    id integer NOT NULL PRIMARY KEY REFERENCES Escalier(id),
+    idVoisinD integer REFERENCES Salle(id),
+    idVoisinF integer REFERENCES Escalier(id),
+    idVoisinG integer REFERENCES Salle(id)
 );
 
 
@@ -68,11 +71,10 @@ INSERT INTO Voisin VALUES
     (9, 0, 10, 8),
     (10, 9, 0, 7);
 
-
-INSERT INTO EscalierJoint VALUES
-    (11, 12),
-    (12, 11);
-
 INSERT INTO VOISIN_ESCALIER VALUES
     (1, 11, 'gauche'),
     (10, 12, 'gauche');
+
+INSERT INTO Escalier_Salle VALUES
+    (11, 1, 12, 0),
+    (12, 10, 11, 0);
