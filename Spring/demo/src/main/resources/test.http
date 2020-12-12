@@ -1,1 +1,3 @@
 GET http://192.168.1.21:8081/rest/position
+
+POST http://192.168.1.21:8081/rest/position/1/left/Escalier

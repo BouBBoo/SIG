@@ -74,17 +74,44 @@ public class RestControl {
         return positionService.findPosition();
     }
 
-    @PostMapping("/rest/position/{id}/{direction}/{typesalle}")
-    public void updateLocalisation(@PathVariable(value = "id") long id, @PathVariable(value = "direction") String direction, @PathVariable String typesalle){
+    @PostMapping("/rest/position/{id}/{direction}/{typesallesrc}/{typesalledest}")
+    public void updateLocalisation(@PathVariable(value = "id") long id, @PathVariable(value = "direction") String direction
+            , @PathVariable(value = "typesallesrc") String typesallesrc, @PathVariable(value = "typesalledest") String typesalledest){
         Position position = positionService.findPosition();
-        if(typesalle.equals("Escalier")){
-            if(direction.equals("left")){
-                Coordinate coordinate = new Coordinate();
-                coordinate.x = position.getGeom().getCoordinate().x -= 0.75;
-                coordinate.y = position.getGeom().getCoordinate().y ;
-                Point pointFromInternalCoord = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());
-
+        Coordinate coordinate = new Coordinate();
+        coordinate.x = position.getGeom().getCoordinate().x;
+        coordinate.y = position.getGeom().getCoordinate().y;
+        if(typesalledest.equals(typesallesrc) && typesallesrc.equals("salle")){
+            switch (direction){
+                case "left":
+                    coordinate.y -= 1;
+                    break;
+                case "right":
+                    coordinate.y += 1;
+                    break;
+                case "face":
+                    if(coordinate.x == 0.5){
+                        coordinate.x += 2;
+                    }else{
+                        coordinate.x -= 2;
+                    }
+                    break;
             }
+            Point point = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());
+            position.setGeom(point);
+            positionService.updatePosition(position);
+        }else if(!typesalledest.equals(typesallesrc)){
+            switch (direction){
+                case "left":
+                    coordinate.y -= 0.75;
+                    break;
+                case "right":
+                    coordinate.y += 0.75;
+                    break;
+            }
+            Point point = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());
+            position.setGeom(point);
+            positionService.updatePosition(position);
         }
     }
 }

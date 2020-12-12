@@ -13,4 +13,8 @@ public class PositionService {
     public Position findPosition(){
         return positionRepository.findById(Long.parseLong("1")).get();
     }
+
+    public void updatePosition(Position position) {
+        positionRepository.save(position);
+    }
 }
