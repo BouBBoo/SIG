@@ -1,9 +1,10 @@
 DROP TABLE VOISIN;
 DROP TABLE VOISIN_ESCALIER;
 DROP TABLE Escalier_Salle;
+DROP TABLE POSITION;
 DROP TABLE SALLE;
 DROP TABLE ESCALIER;
-DROP TABLE POSITION;
+
 
 
 CREATE TABLE Salle(
@@ -17,8 +18,8 @@ CREATE TABLE Salle(
 CREATE TABLE Escalier(
 	id integer NOT NULL PRIMARY KEY,
 	geom geometry,
-	etage_courant integer NOT NULL,
-        etage_destination integer NOT NULL
+	etage_courant integer,
+    etage_destination integer
 );
 
 CREATE TABLE Voisin(
@@ -43,7 +44,9 @@ CREATE TABLE Escalier_Salle(
 
 CREATE TABLE POSITION(
     id integer PRIMARY KEY,
-    geom geometry
+    geom geometry,
+    idsalle integer REFERENCES Salle(id),
+    idescalier integer REFERENCES Escalier(id)
 );
 
 
@@ -61,6 +64,7 @@ INSERT INTO SALLE VALUES
 	(10, 'E11', 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))','Salle de TD', 1);
 
 INSERT INTO Escalier VALUES
+    (0, null, null, null),
 	(11, 'POLYGON((0 1, 1 1, 1 1.5, 0 1.5, 0 1))', 0, 1),
 	(12, 'POLYGON((0 1, 1 1, 1 1.5, 0 1.5, 0 1))', 1, 0);
 
@@ -85,4 +89,4 @@ INSERT INTO Escalier_Salle VALUES
     (12, 10, 11, 0);
 
 INSERT INTO POSITION VALUES
-    (1, 'POINT(0.5 0.5)');
+    (1, 'POINT(0.5 0.5)', 1, 0);

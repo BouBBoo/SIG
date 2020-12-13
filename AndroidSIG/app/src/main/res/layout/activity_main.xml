@@ -13,17 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:onClick="TempoFuncForNav"
-        android:rotation="90"
+        android:onClick="searchPath"
         app:backgroundTint="#CDFFFFFF"
         app:backgroundTintMode="add"
         app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMain"
+        app:layout_constraintTop_toBottomOf="@+id/webview"
         app:rippleColor="#00CA2424"
-        app:srcCompat="@drawable/abc_vector_test" />
+        app:srcCompat="@android:drawable/ic_menu_search" />
 
     <WebView
         android:id="@+id/webview"
@@ -32,8 +31,10 @@
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="@+id/VoisinFace"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
 
     <TextView
         android:id="@+id/VoisinGauche"
@@ -72,8 +73,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
+        app:layout_constraintBottom_toTopOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.756"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/webview" />
 
@@ -123,5 +125,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#00CA2424"
         app:srcCompat="@drawable/abc_vector_test" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/salleactuelle"
+        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.265"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/webview"
+        app:layout_constraintVertical_bias="0.496" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="318dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="160dp"
+        app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/webview"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

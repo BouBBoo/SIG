@@ -17,6 +17,9 @@ public class EscalierService {
     }
 
     public List<Escalier> findAll() {
-        return (List<Escalier>)escalierRepository.findAll();
+        List<Escalier> list = (List<Escalier>) escalierRepository.findAll();
+        list.remove(0);
+
+        return list;
     }
 }

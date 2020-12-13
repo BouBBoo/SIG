@@ -27,7 +27,6 @@ public class VoisinService {
 
     public Voisin findSalleVoisin(long id){
         Voisin voisin = this.voisinRepository.findById(id).get();
-        System.out.println(voisin);
         return voisin;
     }
 

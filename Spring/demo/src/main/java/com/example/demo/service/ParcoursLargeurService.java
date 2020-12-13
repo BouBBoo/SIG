@@ -71,9 +71,6 @@ public class ParcoursLargeurService {
     public List<Object> avancer(List<Voisin> listVoisin, List<VoisinEscalier> listVoisinEscalier, List<EscalierSalle> listEscalierSalle,
                                 List<Object> parcouru, Object aParcourir) {
 
-        System.out.println("--------------------> ENTRY");
-        System.out.print(parcouru);
-
         // Liste des elements pour la prochaine iteration
         List<Object> temp = new ArrayList<>();
         Voisin voisinRow = null;
@@ -96,7 +93,6 @@ public class ParcoursLargeurService {
                             List<Object> res = new ArrayList<>();
                             res.add(destination);
                             res.add(0, aParcourir);
-                            System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
                         temp.add(salleRepository.findById(voisinRow.getIdvoisind()).get());
@@ -112,7 +108,6 @@ public class ParcoursLargeurService {
                             List<Object> res = new ArrayList<>();
                             res.add(destination);
                             res.add(0, aParcourir);
-                            System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
                         temp.add(salleRepository.findById(voisinRow.getIdvoising()).get());
@@ -127,7 +122,6 @@ public class ParcoursLargeurService {
                             List<Object> res = new ArrayList<>();
                             res.add(destination);
                             res.add(0, aParcourir);
-                            System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
                         temp.add(salleRepository.findById(voisinRow.getIdvoisinf()).get());
@@ -167,7 +161,6 @@ public class ParcoursLargeurService {
                             List<Object> res = new ArrayList<>();
                             res.add(destination);
                             res.add(0, aParcourir);
-                            System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
                         temp.add(salleRepository.findById(voisinEscalierSalleRow.getIdvoisind()).get());
@@ -181,7 +174,6 @@ public class ParcoursLargeurService {
                             List<Object> res = new ArrayList<>();
                             res.add(destination);
                             res.add(0, aParcourir);
-                            System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
                         temp.add(salleRepository.findById(voisinEscalierSalleRow.getIdvoising()).get());
@@ -202,7 +194,6 @@ public class ParcoursLargeurService {
             List<Object> res = avancer(listVoisin, listVoisinEscalier, listEscalierSalle, parcouru, elem);
             if (res != null) {
                 res.add(0, aParcourir);
-                System.out.println("<--------------------- CALLBACK");
                 return res;
             }
         }

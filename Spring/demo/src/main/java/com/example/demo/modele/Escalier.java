@@ -10,12 +10,12 @@ import java.util.Objects;
 public class Escalier {
     @Id
     private Long id;
-    private int etage_courant;
-    private int etage_destination;
+    private Integer etage_courant;
+    private Integer etage_destination;
 
     public Escalier(){}
 
-    public Escalier(Long id, Geometry geometry, int etage_courant, int etage_destination) {
+    public Escalier(Long id, Geometry geometry, Integer etage_courant, Integer etage_destination) {
         this.id = id;
         this.etage_courant = etage_courant;
         this.etage_destination = etage_destination;
@@ -33,7 +33,7 @@ public class Escalier {
             return etage_courant;
     }
 
-    public void setEtage_courant(int etage_courant) {
+    public void setEtage_courant(Integer etage_courant) {
         this.etage_courant = etage_courant;
     }
 
@@ -41,7 +41,7 @@ public class Escalier {
         return etage_destination;
     }
 
-    public void setEtage_destination(int etage_destination) {
+    public void setEtage_destination(Integer etage_destination) {
         this.etage_destination = etage_destination;
     }
 

@@ -1,6 +1,9 @@
 package com.example.androidsig.modele;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.Objects;
 
 public class Salle{
     private long id;
@@ -20,7 +23,17 @@ public class Salle{
     @NonNull
     @Override
     public String toString() {
-        return "id: " + this.id + ", type_salle: " + this.type_salle + ", nom: " + this.nom;
+        return this.nom;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return this.getId() == ((Salle)obj).getId();
     }
 
     public long getId() {
