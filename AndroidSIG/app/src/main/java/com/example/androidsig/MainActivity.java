@@ -1,6 +1,7 @@
 package com.example.androidsig;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.androidsig.modele.EscalierSalle;
 import com.example.androidsig.modele.Position;
 import com.example.androidsig.modele.Salle;
 import com.example.androidsig.modele.Voisin;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private List<Salle> salleList;
     private List<Escalier> escalierList;
+    private List<Salle> pathDirection;
     private Object currentSalle;
     private Voisin currentVoisin;
     private Position currentPosition;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         currentVoisin = null;
         escalierList = new ArrayList<>();
         currentPosition = null;
+        pathDirection = new ArrayList<>();
 
         this.loadPosition();
         this.loadData();
@@ -127,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        }else{
+        }
+        else{
             Escalier escalier = (Escalier) currentSalle;
             TextView textView = findViewById(R.id.textViewMain);
             textView.setText(getString(R.string.escalier) + escalier.getId());
@@ -174,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage1");
             }
-        }else {
+        }
+        else {
             if(((Escalier)currentSalle).getEtage_courant() == 0){
                 myWebView.loadUrl(getString(R.string.urlnodejs) + "/etage0");
             }else{
@@ -182,8 +188,36 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         this.updateSpinner();
+        this.updatePath();
     }
 
+    private void updatePath() {
+        if(pathDirection.size() != 0){
+            Salle s = pathDirection.get(0);
+            pathDirection.remove(0);
+            FloatingActionButton floatingActionButtonG = findViewById(R.id.floatingActionButton4);
+            FloatingActionButton floatingActionButtonD = findViewById(R.id.floatingActionButton2);
+            FloatingActionButton floatingActionButtonF = findViewById(R.id.floatingActionButton5);
+            floatingActionButtonD.setBackgroundColor(Color.LTGRAY);
+            floatingActionButtonG.setBackgroundColor(Color.LTGRAY);
+            floatingActionButtonF.setBackgroundColor(Color.LTGRAY);
+            if(currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                if(currentVoisin.getVoisinD().equals(s)){
+                    floatingActionButtonD.setBackgroundColor(Color.BLUE);
+                }
+            }
+            if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                if(currentVoisin.getVoisinF().equals(s)){
+                    floatingActionButtonF.setBackgroundColor(Color.BLUE);
+                }
+            }
+            if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                if(currentVoisin.getVoisinG().equals(s)){
+                    floatingActionButtonG.setBackgroundColor(Color.BLUE);
+                }
+            }
+        }
+    }
 
 
     private void updateListEscalier(JSONArray jsonObject) {
@@ -403,7 +437,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchPath(View view){
+        Spinner spinner = findViewById(R.id.spinner);
+        Salle salle = (Salle)spinner.getSelectedItem();
+        Log.d("Path", String.valueOf(salle));
 
+        if(currentSalle.getClass().equals(Salle.class)){
+            Salle sall = (Salle) currentSalle;
+            URL url = null;
+            try {
+                url = new URL(getString(R.string.urlSpring) + "parcours/" +  sall.getId() + "/" + salle.getId());
+                new ParcoursTask().execute(url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private class ParcoursTask extends AsyncTask<URL, Void, List<Salle>>{
+
+        @Override
+        protected List<Salle> doInBackground(URL... urls) {
+            HttpURLConnection connection = null;
+            List<Salle> list = new ArrayList<>();
+            try{
+                connection = (HttpURLConnection) urls[0].openConnection();
+                int response = connection.getResponseCode();
+
+                if(response == HttpURLConnection.HTTP_OK){
+                    StringBuilder stringBuilder = new StringBuilder();
+                    try(BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))){
+                        String line;
+                        while ((line = reader.readLine()) != null){
+                            stringBuilder.append(line);
+                        }
+                        JSONArray jsonArray = new JSONArray(stringBuilder.toString());
+                        for(int i = 0; i < jsonArray.length(); i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            Salle salle = new Salle();
+                            salle.setId(object.getInt("id"));
+                            salle.setNom(object.getString("nom"));
+                            salle.setEtage(object.getInt("etage"));
+                            salle.setType_salle(object.getString("type_salle"));
+
+                            list.add(salle);
+                        }
+                        return list;
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Salle> salles) {
+            pathDirection = salles;
+        }
     }
 
     private class PositionTask extends AsyncTask<URL, Void, Position>{
