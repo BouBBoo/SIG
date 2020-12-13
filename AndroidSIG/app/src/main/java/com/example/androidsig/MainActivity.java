@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String genericUrl = "http://192.168.1.21:8081/rest/";
     private List<Salle> salleList;
     private List<Escalier> escalierList;
     private Object currentSalle;
@@ -66,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData(){
         try {
-            URL url = new URL(genericUrl + "salles");
+            URL url = new URL(getString(R.string.urlnodejs) + "salles");
             new SpringRestSalle().execute(url);
-            url = new URL(genericUrl + "escalier");
+            url = new URL(getString(R.string.urlnodejs) + "escalier");
             new SpringRestEscalier().execute(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -281,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentSalle == null){
             this.currentSalle = salleList.get(0);
             try {
-                new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
+                new RestVoisin().execute(new URL(getString(R.string.urlnodejs) + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(getString(R.string.urlnodejs) + "salles/escalier/" + ((Salle)currentSalle).getId()));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -314,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                         if (id == 0) {
                             Voisins.add(null);
                         } else {
-                            URL url = new URL(genericUrl + "salles/" + id);
+                            URL url = new URL(getString(R.string.urlnodejs) + "salles/" + id);
                             connection.disconnect();
                             connection = (HttpURLConnection) url.openConnection();
                             reponse = connection.getResponseCode();
@@ -343,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject object = getText(connection.getInputStream());
                     if(object != null){
                         int id = object.getInt("escalier");
-                        URL url = new URL(genericUrl + "Escalier/" + id);
+                        URL url = new URL(getString(R.string.urlnodejs) + "Escalier/" + id);
                         connection.disconnect();
                         connection = (HttpURLConnection) url.openConnection();
                         reponse = connection.getResponseCode();
@@ -428,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
             if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinF();
                 try {
-                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(getString(R.string.urlnodejs) + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(getString(R.string.urlnodejs) + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -437,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
                 currentVoisin = new Voisin();
 
                 try {
-                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(getString(R.string.urlnodejs) + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -452,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
             if (currentVoisin.getVoisinD().getClass().equals(Salle.class)) {
                 currentSalle = currentVoisin.getVoisinD();
                 try {
-                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()), new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(getString(R.string.urlnodejs) + "salles/voisins/" + ((Salle)currentSalle).getId()), new URL(getString(R.string.urlnodejs) + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -460,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
                 currentSalle = currentVoisin.getVoisinF();
                 currentVoisin = new Voisin();
                 try {
-                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(getString(R.string.urlnodejs) + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -475,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
             if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
                 currentSalle = currentVoisin.getVoisinG();
                 try {
-                    new RestVoisin().execute(new URL(genericUrl + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(genericUrl + "salles/escalier/" + ((Salle)currentSalle).getId()));
+                    new RestVoisin().execute(new URL(getString(R.string.urlnodejs) + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(getString(R.string.urlnodejs) + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -483,7 +482,7 @@ public class MainActivity extends AppCompatActivity {
                 currentSalle = currentVoisin.getVoisinG();
                 currentVoisin = new Voisin();
                 try {
-                    URL url = new URL(genericUrl + "Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    URL url = new URL(getString(R.string.urlnodejs) + "Escalier/joint/" + ((Escalier)currentSalle).getId());
                     new EscalierJoint().execute(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -494,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateLocalisation(String direction) {
-        String url = genericUrl + "position/1/" + direction + "/";
+        String url = getString(R.string.urlnodejs) + "position/1/" + direction + "/";
         if(currentSalle.getClass().equals(Escalier.class)){
             url += "escalier/";
         }else{
@@ -602,7 +601,7 @@ public class MainActivity extends AppCompatActivity {
     private class navigationParcoursLargeur {
 
         protected ArrayList<Object> parcoursToSalle(Object current) {
-            System.out.println("Test");
+            System.out.println("TestInnerClass");
             System.out.println(salleList);
             System.out.println(escalierList);
             return null;
@@ -640,6 +639,9 @@ public class MainActivity extends AppCompatActivity {
 
     // ----->
     private ArrayList<Object> setPlusCourtChemin(Object current) {
+        System.out.println("TestSuperClass");
+        System.out.println(salleList);
+        System.out.println(escalierList);
         navigationParcoursLargeur navClass = new navigationParcoursLargeur();
         return navClass.parcoursToSalle(current);
     }
