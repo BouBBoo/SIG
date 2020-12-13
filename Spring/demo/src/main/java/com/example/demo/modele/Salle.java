@@ -3,6 +3,7 @@ package com.example.demo.modele;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 public class Salle implements Serializable {
@@ -51,5 +52,16 @@ public class Salle implements Serializable {
 
     public void setEtage(int etage) {
         this.etage = etage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Salle salle = (Salle)obj;
+        return salle.getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

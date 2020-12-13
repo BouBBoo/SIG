@@ -2,6 +2,7 @@ package com.example.demo.modele;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class VoisinEscalier {
@@ -34,5 +35,16 @@ public class VoisinEscalier {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        VoisinEscalier voisinEscalier = (VoisinEscalier) obj;
+        return voisinEscalier.getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

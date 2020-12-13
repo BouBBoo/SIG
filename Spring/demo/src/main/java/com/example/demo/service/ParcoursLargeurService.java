@@ -130,9 +130,9 @@ public class ParcoursLargeurService {
                             System.out.println("<--------------------- CALLBACK");
                             return res;
                         }
+                        temp.add(salleRepository.findById(voisinRow.getIdvoisinf()).get());
+                        parcouru.add(voisinRow.getIdvoisinf());
                     }
-                    temp.add(salleRepository.findById(voisinRow.getIdvoisinf()).get());
-                    parcouru.add(voisinRow.getIdvoisinf());
                 }
                 // On trouve les escaliers voisins
             }
@@ -191,7 +191,7 @@ public class ParcoursLargeurService {
                 // On verifie l'escalier a un autre etage
                 if (!Objects.isNull(voisinEscalierSalleRow.getIdvoisinf())) {
                     if (!parcouru.contains(voisinEscalierSalleRow.getIdvoisinf())) {
-                        temp.add(salleRepository.findById(voisinEscalierSalleRow.getIdvoisinf()).get());
+                        temp.add(escalierRepository.findById(voisinEscalierSalleRow.getIdvoisinf()).get());
                         parcouru.add(voisinEscalierSalleRow.getIdvoisinf());
                     }
                 }

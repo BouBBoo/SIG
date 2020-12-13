@@ -4,6 +4,7 @@ import org.postgis.Geometry;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Escalier {
@@ -43,5 +44,15 @@ public class Escalier {
     public void setEtage_destination(int etage_destination) {
         this.etage_destination = etage_destination;
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        Escalier escalier = (Escalier)obj;
+        return escalier.getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

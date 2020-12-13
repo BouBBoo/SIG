@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 public class Voisin implements Serializable {
@@ -46,5 +47,16 @@ public class Voisin implements Serializable {
     }
 
     public Voisin() {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Voisin voisin = (Voisin)obj;
+        return voisin.getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

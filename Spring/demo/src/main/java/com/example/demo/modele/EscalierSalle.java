@@ -2,6 +2,7 @@ package com.example.demo.modele;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class EscalierSalle {
@@ -41,5 +42,16 @@ public class EscalierSalle {
 
     public void setIdvoisinf(Long idvoisinf) {
         this.idvoisinf = idvoisinf;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        EscalierSalle escalier = (EscalierSalle) obj;
+        return escalier.getId() == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
