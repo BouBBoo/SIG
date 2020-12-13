@@ -1,17 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.modele.*;
-import com.example.demo.service.EscalierService;
-import com.example.demo.service.PositionService;
-import com.example.demo.service.SalleService;
-import com.example.demo.service.VoisinService;
+import com.example.demo.service.*;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +26,9 @@ public class RestControl {
 
     @Autowired
     PositionService positionService;
+
+    @Autowired
+    ParcoursLargeurService parcoursLargeurService;
     
     @RequestMapping("/rest/salles")
     public List<Salle> findAllSalles(){
@@ -128,5 +126,10 @@ public class RestControl {
             position.setGeom(point);
             positionService.updatePosition(position);
         }
+    }
+
+    @RequestMapping("/rest/parcours/{idSource}/{idDest}")
+    public List<Object> parcoursLargeur(@PathVariable(value = "idSource") long idSource, @PathVariable(value = "idDest") long idDest){
+        return parcoursLargeurService.parcourir(idSource, idDest);
     }
 }

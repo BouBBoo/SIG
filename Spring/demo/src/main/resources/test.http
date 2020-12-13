@@ -1,3 +1,2 @@
-GET http://192.168.1.21:8081/rest/position
+GET http://localhost:8081/rest/parcours/1/8
 
-POST http://192.168.1.21:8081/rest/position/1/left/Escalier

@@ -604,6 +604,15 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("TestInnerClass");
             System.out.println(salleList);
             System.out.println(escalierList);
+            // On lance la recurcivite
+            return avancerDansParcours(current);
+        }
+
+        protected ArrayList<Object> avancerDansParcours(Object current) {
+            // Le chemin que l'on vas parcourir
+            ArrayList<Object> chemin = new ArrayList<>();
+            // Les endroits deja visites
+            ArrayList<Object> visite = new ArrayList<>();
             return null;
         }
 
@@ -639,13 +648,11 @@ public class MainActivity extends AppCompatActivity {
 
     // ----->
     private ArrayList<Object> setPlusCourtChemin(Object current) {
-        System.out.println("TestSuperClass");
-        System.out.println(salleList);
-        System.out.println(escalierList);
         navigationParcoursLargeur navClass = new navigationParcoursLargeur();
         return navClass.parcoursToSalle(current);
     }
 
+    // Utilise sur le bouton
     public void TempoFuncForNav(View view) {
         System.out.println(setPlusCourtChemin(currentSalle));
     }
