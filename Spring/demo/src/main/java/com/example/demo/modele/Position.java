@@ -19,6 +19,8 @@ public class Position implements Serializable {
     @JsonSerialize(using = GeometrySerializer.class)
     @JsonDeserialize(contentUsing = GeometryDeserializer.class)
     private Point geom;
+    private Long idsalle;
+    private Long idescalier;
 
     public Long getId() {
         return id;
@@ -34,5 +36,21 @@ public class Position implements Serializable {
 
     public void setGeom(Point geom) {
         this.geom = geom;
+    }
+
+    public Long getIdsalle() {
+        return idsalle;
+    }
+
+    public void setIdsalle(Long idsalle) {
+        this.idsalle = idsalle;
+    }
+
+    public Long getIdescalier() {
+        return idescalier;
+    }
+
+    public void setIdescalier(Long isescalier) {
+        this.idescalier = isescalier;
     }
 }

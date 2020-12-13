@@ -71,14 +71,14 @@ public class RestControl {
         return positionService.findPosition();
     }
 
-    @RequestMapping("/rest/position/{id}/{direction}/{typesallesrc}/{typesalledest}")
+    @RequestMapping("/rest/position/{id}/{direction}/{typesallesrc}/{typesalledest}/{iddest}")
     public void updateLocalisation(@PathVariable(value = "id") long id, @PathVariable(value = "direction") String direction
-            , @PathVariable(value = "typesallesrc") String typesallesrc, @PathVariable(value = "typesalledest") String typesalledest){
+            , @PathVariable(value = "typesallesrc") String typesallesrc, @PathVariable(value = "typesalledest") String typesalledest,
+                                   @PathVariable(value = "iddest") long iddest){
         Position position = positionService.findPosition();
         Coordinate coordinate = new Coordinate();
         coordinate.x = position.getGeom().getCoordinate().x;
         coordinate.y = position.getGeom().getCoordinate().y;
-        System.out.println("Yes");
         if(typesalledest.equals(typesallesrc) && typesallesrc.equals("salle")){
             switch (direction){
                 case "left":
@@ -105,7 +105,6 @@ public class RestControl {
             }
             Point point = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());
             position.setGeom(point);
-            positionService.updatePosition(position);
         }else if(!typesalledest.equals(typesallesrc)){
             switch (direction){
                 case "left":
@@ -124,9 +123,19 @@ public class RestControl {
 
                     break;
             }
+
+
+
             Point point = GeometryFactory.createPointFromInternalCoord(coordinate, position.getGeom());
             position.setGeom(point);
-            positionService.updatePosition(position);
         }
+        if(typesalledest.equals("salle")){
+            position.setIdsalle(iddest);
+            position.setIdescalier(Long.parseLong("0"));
+        }else{
+            position.setIdescalier(iddest);
+            position.setIdsalle(Long.parseLong("0"));
+        }
+        positionService.updatePosition(position);
     }
 }

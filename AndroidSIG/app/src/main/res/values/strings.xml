@@ -3,4 +3,8 @@
     <string name="urlnodejs">http://192.168.1.21:1234</string>
     <string name="textview">textview</string>
     <string name="urlSpring">http://192.168.1.21:8081/rest/</string>
+    <string name="NoVoisin">Pas de voisin</string>
+    <string name="escalier">Escalier</string>
+    <string name="descendre">Descendre</string>
+    <string name="monter">Monter</string>
 </resources>
