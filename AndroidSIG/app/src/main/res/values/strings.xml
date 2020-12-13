@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AndroidSIG</string>
-    <string name="urlnodejs">http://192.168.56.101:1234</string>
+    <string name="urlnodejs">http://192.168.1.21:1234</string>
     <string name="textview">textview</string>
     <string name="urlSpring">http://192.168.1.21:8081/rest/</string>
     <string name="NoVoisin">Pas de voisin</string>

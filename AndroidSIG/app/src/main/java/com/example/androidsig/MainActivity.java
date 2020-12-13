@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.androidsig.modele.Escalier;
 import com.example.androidsig.modele.EscalierSalle;
@@ -40,7 +41,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private List<Salle> salleList;
     private List<Escalier> escalierList;
-    private List<Salle> pathDirection;
+    private List<Object> pathDirection;
     private Object currentSalle;
     private Voisin currentVoisin;
     private Position currentPosition;
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         salleList = new ArrayList<>();
         currentSalle = null;
-        currentVoisin = null;
+        currentVoisin = new Voisin();
         escalierList = new ArrayList<>();
-        currentPosition = null;
+        currentPosition = new Position();
         pathDirection = new ArrayList<>();
 
         this.loadPosition();
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentSalle.getClass().equals(Salle.class)){
             Salle salle = (Salle) currentSalle;
             TextView textView = findViewById(R.id.textViewMain);
-            textView.setText(salle.getType_salle() + " : " + salle.getNom());
+            textView.setText(salle.getNom());
             if(currentVoisin != null ){
                 textView = findViewById(R.id.VoisinDroite);
                 if(currentVoisin.getVoisinD() != null){
@@ -192,28 +193,102 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updatePath() {
+        FloatingActionButton floatingActionButtonG = findViewById(R.id.floatingActionButton4);
+        FloatingActionButton floatingActionButtonD = findViewById(R.id.floatingActionButton2);
+        FloatingActionButton floatingActionButtonF = findViewById(R.id.floatingActionButton5);
+        floatingActionButtonD.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.grey));
+        floatingActionButtonG.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.grey));
+        floatingActionButtonF.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.grey));
         if(pathDirection.size() != 0){
-            Salle s = pathDirection.get(0);
-            pathDirection.remove(0);
-            FloatingActionButton floatingActionButtonG = findViewById(R.id.floatingActionButton4);
-            FloatingActionButton floatingActionButtonD = findViewById(R.id.floatingActionButton2);
-            FloatingActionButton floatingActionButtonF = findViewById(R.id.floatingActionButton5);
-            floatingActionButtonD.setBackgroundColor(Color.LTGRAY);
-            floatingActionButtonG.setBackgroundColor(Color.LTGRAY);
-            floatingActionButtonF.setBackgroundColor(Color.LTGRAY);
-            if(currentVoisin.getVoisinD().getClass().equals(Salle.class)){
-                if(currentVoisin.getVoisinD().equals(s)){
-                    floatingActionButtonD.setBackgroundColor(Color.BLUE);
+            if(currentSalle.getClass().equals(Salle.class)){
+                if(currentSalle.equals(pathDirection.get(0))){
+                    pathDirection.remove(0);
+                    Log.d("List", pathDirection.toString());
+                    if(pathDirection.size() != 0){
+                        if(pathDirection.get(0).getClass().equals(Salle.class)){
+                            Salle s = (Salle)pathDirection.get(0);
+                            if(currentVoisin.getVoisinD()!= null && currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinD().equals(s)){
+                                    floatingActionButtonD.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinF()!= null && currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinF().equals(s)){
+                                    floatingActionButtonF.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinG()!= null && currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinG().equals(s)){
+                                    floatingActionButtonG.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                        }else{
+                            Escalier escalier = (Escalier) pathDirection.get(0);
+                            Log.d("Test", escalier.toString());
+                            if(currentVoisin.getVoisinD()!= null && currentVoisin.getVoisinD().getClass().equals(Escalier.class)){
+                                if(currentVoisin.getVoisinD().equals(escalier)){
+                                    floatingActionButtonD.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinF()!= null && currentVoisin.getVoisinF().getClass().equals(Escalier.class)){
+                                if(currentVoisin.getVoisinF().equals(escalier)){
+                                    floatingActionButtonF.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinG()!= null && currentVoisin.getVoisinG().getClass().equals(Escalier.class)){
+                                if(currentVoisin.getVoisinG().equals(escalier)){
+                                    floatingActionButtonG.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    Salle sall = (Salle) currentSalle;
+                    URL url = null;
+                    try {
+                        url = new URL(getString(R.string.urlSpring) + "parcours/" +  sall.getId() + "/" + ((Salle)pathDirection.get(pathDirection.size() - 1)).getId());
+                        new ParcoursTask().execute(url);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            if(currentVoisin.getVoisinF().getClass().equals(Salle.class)){
-                if(currentVoisin.getVoisinF().equals(s)){
-                    floatingActionButtonF.setBackgroundColor(Color.BLUE);
-                }
-            }
-            if(currentVoisin.getVoisinG().getClass().equals(Salle.class)){
-                if(currentVoisin.getVoisinG().equals(s)){
-                    floatingActionButtonG.setBackgroundColor(Color.BLUE);
+            }else{
+                if(currentSalle.equals(pathDirection.get(0))){
+                    pathDirection.remove(0);
+                    Log.d("List", pathDirection.toString());
+                    if(pathDirection.size() != 0){
+                        if(pathDirection.get(0).getClass().equals(Salle.class)){
+                            Salle s = (Salle)pathDirection.get(0);
+                            if(currentVoisin.getVoisinD()!= null && currentVoisin.getVoisinD().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinD().equals(s)){
+                                    floatingActionButtonD.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinF()!= null && currentVoisin.getVoisinF().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinF().equals(s)){
+                                    floatingActionButtonF.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                            if(currentVoisin.getVoisinG()!= null && currentVoisin.getVoisinG().getClass().equals(Salle.class)){
+                                if(currentVoisin.getVoisinG().equals(s)){
+                                    floatingActionButtonG.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                                }
+                            }
+                        }else{
+                            Escalier escalier = (Escalier) pathDirection.get(0);
+                            Log.d("Test", escalier.toString());
+                            floatingActionButtonF.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.lightblue));
+                        }
+                    }
+                }else{
+                    Salle sall = (Salle) currentSalle;
+                    URL url = null;
+                    try {
+                        url = new URL(getString(R.string.urlSpring) + "parcours/" +  sall.getId() + "/" + ((Salle)pathDirection.get(pathDirection.size() - 1)).getId());
+                        new ParcoursTask().execute(url);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -233,6 +308,18 @@ public class MainActivity extends AppCompatActivity {
                 escalierList.add(escalier);
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if(currentSalle == null){
+            if(currentPosition.getIdescalier() != 0){
+                currentSalle = getEscalierFromId(currentPosition.getIdescalier());
+                try {
+                    URL url = new URL(getString(R.string.urlSpring) + "Escalier/joint/" + ((Escalier)currentSalle).getId());
+                    new EscalierJoint().execute(url);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -256,29 +343,19 @@ public class MainActivity extends AppCompatActivity {
         if(currentSalle == null){
             if(currentPosition.getIdsalle() != 0){
                 currentSalle = getSalleFromId(currentPosition.getIdsalle());
-                Log.d("IdSalle", ""+currentPosition.getIdsalle());
                 try {
                     new RestVoisin().execute(new URL(getString(R.string.urlSpring) + "salles/voisins/" + ((Salle)currentSalle).getId()),new URL(getString(R.string.urlSpring) + "salles/escalier/" + ((Salle)currentSalle).getId()));
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-            }else{
-                currentSalle = getEscalierFromId(currentPosition.getIdescalier());
-                try {
-                    URL url = new URL(getString(R.string.urlSpring) + "Escalier/joint/" + ((Escalier)currentSalle).getId());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
             }
-
-            this.updateView();
         }
     }
 
     private void updateSpinner(){
         Spinner spinner = findViewById(R.id.spinner);
 
-        List<Salle> salles = salleList;
+        List<Salle> salles = new ArrayList<>(salleList);
         if(currentSalle.getClass().equals(Salle.class)){
             Salle s = (Salle) currentSalle;
             salles.remove(s);
@@ -428,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Escalier getEscalierFromId(int id){
+        Log.d("ListEscae", escalierList.toString());
         for (Escalier escalier : escalierList){
             if(escalier.getId() == id){
                 return escalier;
@@ -454,12 +532,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ParcoursTask extends AsyncTask<URL, Void, List<Salle>>{
+    private class ParcoursTask extends AsyncTask<URL, Void, List<Object>>{
 
         @Override
-        protected List<Salle> doInBackground(URL... urls) {
+        protected List<Object> doInBackground(URL... urls) {
             HttpURLConnection connection = null;
-            List<Salle> list = new ArrayList<>();
+            List<Object> list = new ArrayList<>();
             try{
                 connection = (HttpURLConnection) urls[0].openConnection();
                 int response = connection.getResponseCode();
@@ -474,13 +552,20 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray jsonArray = new JSONArray(stringBuilder.toString());
                         for(int i = 0; i < jsonArray.length(); i++){
                             JSONObject object = jsonArray.getJSONObject(i);
-                            Salle salle = new Salle();
-                            salle.setId(object.getInt("id"));
-                            salle.setNom(object.getString("nom"));
-                            salle.setEtage(object.getInt("etage"));
-                            salle.setType_salle(object.getString("type_salle"));
-
-                            list.add(salle);
+                            if(object.toString().contains("etage_courant")){
+                                Escalier escalier = new Escalier();
+                                escalier.setId(object.getInt("id"));
+                                escalier.setEtage_courant(object.getInt("etage_courant"));
+                                escalier.setEtage_destination(object.getInt("etage_destination"));
+                                list.add(escalier);
+                            }else{
+                                Salle salle = new Salle();
+                                salle.setId(object.getInt("id"));
+                                salle.setNom(object.getString("nom"));
+                                salle.setEtage(object.getInt("etage"));
+                                salle.setType_salle(object.getString("type_salle"));
+                                list.add(salle);
+                            }
                         }
                         return list;
                     }
@@ -492,8 +577,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<Salle> salles) {
+        protected void onPostExecute(List<Object> salles) {
             pathDirection = salles;
+            updatePath();
         }
     }
 

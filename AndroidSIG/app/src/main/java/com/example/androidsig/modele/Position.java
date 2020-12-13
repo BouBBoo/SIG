@@ -1,5 +1,7 @@
 package com.example.androidsig.modele;
 
+import androidx.annotation.NonNull;
+
 public class Position {
 
     private int id;
@@ -24,6 +26,12 @@ public class Position {
 
     public int getIdescalier() {
         return idescalier;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return id + " " + idsalle + " " + idescalier;
     }
 
     public void setIdescalier(int idescalier) {

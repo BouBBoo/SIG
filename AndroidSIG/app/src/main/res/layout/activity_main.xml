@@ -12,15 +12,17 @@
         android:id="@+id/floatingActionButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:clickable="true"
         android:onClick="searchPath"
         app:backgroundTint="#CDFFFFFF"
         app:backgroundTintMode="add"
         app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/webview"
+        app:layout_constraintVertical_bias="0.524"
         app:rippleColor="#00CA2424"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
@@ -28,45 +30,10 @@
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/VoisinFace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35" />
-
-    <TextView
-        android:id="@+id/VoisinGauche"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="AllerGauche"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton4"
-        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/VoisinDroite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity=""
-        android:text="AllerDroite"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/floatingActionButton5" />
-
-    <TextView
-        android:id="@+id/VoisinFace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_horizontal"
-        android:text="AllerDevant"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewMain"
@@ -83,7 +50,7 @@
         android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="40dp"
         android:clickable="true"
         android:onClick="deplacementDroite"
         android:rotation="180"
@@ -95,26 +62,45 @@
         app:rippleColor="#00CA2424"
         app:srcCompat="@drawable/abc_vector_test" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton4"
+    <TextView
+        android:id="@+id/VoisinDroite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:onClick="deplacementGauche"
-        android:rotation="0"
-        app:backgroundTint="#CDFFFFFF"
-        app:backgroundTintMode="add"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:gravity=""
+        android:text="AllerDroite"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/floatingActionButton5" />
+
+    <TextView
+        android:id="@+id/VoisinGauche"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="AllerGauche"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton4"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButton5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="#00CA2424"
-        app:srcCompat="@drawable/abc_vector_test" />
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/VoisinFace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="AllerDevant"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:clickable="true"
         android:onClick="deplacementFace"
         android:rotation="90"
@@ -122,6 +108,24 @@
         app:backgroundTintMode="add"
         app:layout_constraintBottom_toTopOf="@+id/VoisinGauche"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="#00CA2424"
+        app:srcCompat="@drawable/abc_vector_test" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:clickable="true"
+        android:onClick="deplacementGauche"
+        android:rotation="0"
+        app:backgroundTint="#CDFFFFFF"
+        app:backgroundTintMode="add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton5"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#00CA2424"
         app:srcCompat="@drawable/abc_vector_test" />
@@ -142,22 +146,12 @@
         android:id="@+id/spinner"
         android:layout_width="318dp"
         android:layout_height="39dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButton3"
+        app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/webview"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/VoisinFace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/webview"
-        app:layout_constraintVertical_bias="0.765" />
+        app:layout_constraintVertical_bias="0.52" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
